@@ -36,7 +36,7 @@ def block_to_block_type(markdown_block):
     elif markdown_block.startswith('```') and markdown_block.endswith('```'):
         return BlockType.CODE
     tmp = markdown_block.split('\n')
-    if markdown_block.startswith('>'):
+    if markdown_block.startswith('> '):
         for i in range(len(tmp)):
             if not tmp[i].startswith('>'):
                 return BlockType.PARAGRAPH
@@ -76,8 +76,12 @@ def block_to_children(block, blocktype):
         tmp = block.split('\n')
         newstr = ''
         for i in tmp:
-            newstr += i[1:] + '\n'
-        parent = [ParentNode('blockquote', unpack_nodes(newstr[:-1]))]
+            if not i[1:]:
+                newstr += '<br>'
+                continue
+            newstr += i[1:].strip()
+        newstr = newstr[:-4]
+        parent = [ParentNode('blockquote', unpack_nodes(newstr))]
         return parent
     elif blocktype == BlockType.CODE:
         parent = [ParentNode('pre', [LeafNode('code', block.split('```')[1][1:])])]

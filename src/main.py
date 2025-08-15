@@ -1,40 +1,20 @@
-from textnode import TextNode, TextType
-from htmlnode import HTMLNode
-from markdownblocks import markdown_to_blocks, markdown_to_html_node
+import os
+import shutil
+from copycontent import copy_content
+from generate import generate_pages_recursive
 
 def main():
-    a = """
-# Countries
+    source = '/mnt/d/code/StaticSite/static'
+    dest = '/mnt/d/code/StaticSite/public'
+    print("Deleting public directory...")
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
 
-- Slovenia
-- Croatia
-- Serbia
-- Montenegro
-- Bosnia
+    print("Copying static files to public directory...")
+    copy_content(source, dest)
 
-## Song
-
-1. here comes the
-2. to the
-3. to the
-4. something something floor
-"""
-    b = markdown_to_html_node(a)
-    print(repr(b.to_html()))
+    content = '/mnt/d/code/StaticSite/content'
+    temppath = '/mnt/d/code/StaticSite/template.html'
+    generate_pages_recursive(content, temppath, dest)
 
 main()
-
-        #tmp = []
-        #for i in range(len(tmp1)):
-        #    if i == len(tmp1)-1:
-        #        tmp.append(tmp1[i])
-        #    else:
-        #        tmp.append(tmp1[i] + '\n')
-
-        #tmp = []
-        #for i in range(len(tmp1)):
-        #    if i == len(tmp1)-1:
-        #        tmp.append(tmp1[i])
-        #    else:
-        #        tmp.append(tmp1[i] + '\n')
-        
